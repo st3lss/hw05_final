@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %} {{ title }}{% endblock %}
+{% block content %}
+    <h1>
+      <span class="badge text-bg-primary">{{ group.title }}</span>
+      </h1>
+    <p>{{ group.description }}</p>
+    <article>
+      {% for post in page_obj %}
+        {% include 'includes/card_post.html' %}
+        {% if not forloop.last %}<hr>{% endif %}
+      {% endfor %}
+      {% include 'includes/paginator.html' %}
+    </article> 
+{% endblock %} 

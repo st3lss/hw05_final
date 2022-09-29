@@ -1,0 +1,42 @@
+{% load thumbnail %}
+<article>
+<div class="shadow p-3 mb-5 bg-body rounded">
+<ul class="list-group">
+  <li style="list-style-type: none; margin: 5px 0 15px">
+    Автор: 
+    {% if post.author.get_full_name %}
+      {{ post.author.get_full_name }}
+    {% else %}
+      {{ post.author.username }}
+    {% endif %}
+    <a href="{% url 'posts:profile' post.author.username %}" style="margin: 0 20px">
+      <button type="button" class="btn btn-outline-primary">
+        все посты пользователя
+      </button>
+    </a>
+  </li>
+  <li style="list-style-type: none;">
+    <pre style="white-space: pre-wrap; color: green;">Дата публикации: {{ post.pub_date|date:"d E Y" }}</pre>
+  </li>
+</ul>
+<li style="list-style-type: none; margin: 5px 0 15px">
+  {% thumbnail post.image "480x169" crop="center" upscale=True as im %}
+    <img class="card-img my-2" src="{{ im.url }}">
+  {% endthumbnail %}
+  <div class="card-body">
+    <pre style="margin: 10; white-space: pre-wrap;">{{ post.text }}</pre>
+  </div>
+</li>
+<div class="btn-bar">
+  <a href="{% url 'posts:post_detail' post.id %}" type="button" class="btn btn-outline-primary">
+    подробная информация
+  </a>
+
+  {% if post.group %}
+    <a href="{% url 'posts:group_list'  post.group.slug %}" type="button" class="btn btn-outline-primary">
+      все записи группы
+    </a>
+  {% endif %}
+</div>
+</div>
+</article>

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %}Профайл пользователя {{author}}{% endblock %}
+{% block content %} 
+<div class="mb-5">
+  <h1>
+    <span class="text-secondary">Все посты пользователя {{ author }}</span>
+  </h1>
+  <h3>
+    <span class="text-secondary">Всего постов: {{ author.posts.count }}</span>
+  </h3>
+    {% if following %}
+      <a
+        class="btn btn-lg btn-light"
+        href="{% url 'posts:profile_unfollow' author.username %}" role="button"
+      >
+        Отписаться
+      </a>
+    {% else %}
+        <a
+          class="btn btn-lg btn-primary"
+          href="{% url 'posts:profile_follow' author.username %}" role="button"
+        >
+          Подписаться
+        </a>
+    {% endif %}
+</div>
+{% for post in page_obj %}
+  <article class="shadow p-3 mb-5 bg-body rounded">
+    <ul class="list-group">
+    <li style="list-style-type: none; margin: 5px 0 15px">   
+    Автор: {{ author }}
+    <a href="{% url 'posts:profile' post.author %}" style="margin: 0 20px">
+      <button type="button" class="btn btn-outline-primary">
+        все посты пользователя
+      </button>
+    </a>
+    </li>
+    <li style="list-style-type: none;">
+      <pre style="white-space: pre-wrap; color: green;">Дата публикации: {{ post.pub_date|date:"d E Y" }}</pre>
+    </li>
+    <ul class="list-group">
+    {% thumbnail post.image "480x169" crop="center" upscale=True as im %}
+      <img class="card-img my-2" src="{{ im.url }}">
+    {% endthumbnail %}
+    <div class="card-body shadow-none p-3 mb-5 bg-light rounded">
+      <pre style="margin: 10; white-space: pre-wrap;">{{ post.text }}</pre>
+    </div>
+    <div class="btn-bar">
+      <a href="{% url 'posts:post_detail' post.pk %}" type="button" class="btn btn-outline-primary">
+        подробная информация
+      </a>
+      {% if post.group %}
+        <a href="{% url 'posts:group_list'  post.group.slug %}" type="button" class="btn btn-outline-primary">
+          все записи группы
+        </a>
+      {% endif %}
+  {% if not forloop.last %}<hr>{% endif %}
+</article>
+{% endfor %} 
+{% include 'includes/paginator.html' %}
+{% endblock %}
