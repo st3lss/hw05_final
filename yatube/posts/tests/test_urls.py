@@ -45,7 +45,7 @@ class PostsURLsTests(TestCase):
             (reverse('posts:follow_index'),
              [HTTPStatus.FOUND, 'posts/follow.html']),
             ('/some_page/',
-             [HTTPStatus.NOT_FOUND, 'posts/404.html']),)
+             [HTTPStatus.NOT_FOUND, 'core/404.html']),)
 
     def setUp(self):
         self.guest_client = Client()
