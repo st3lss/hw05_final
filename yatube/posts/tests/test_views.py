@@ -131,7 +131,7 @@ class FollowViewsTest(TestCase):
         self.assertEqual(page_object.author, self.author)
         self.assertEqual(page_object.text, self.post.text)
         self.assertEqual(page_object.pub_date, self.post.pub_date)
-        
+
         self.follower_client.get(reverse('posts:profile_unfollow',
                                  kwargs={'username': self.author.username}))
         response = self.follower_client.get(reverse('posts:follow_index'))

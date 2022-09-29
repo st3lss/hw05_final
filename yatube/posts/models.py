@@ -44,6 +44,7 @@ class Post(models.Model):
     def __str__(self) -> str:
         return self.text[:15]
 
+
 class Comment(models.Model):
     post = models.ForeignKey(
         Post,
@@ -52,7 +53,7 @@ class Comment(models.Model):
         null=True,
         related_name="comments",
     )
-    author = models.ForeignKey( 
+    author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name="comments",
     )

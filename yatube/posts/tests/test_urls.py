@@ -27,25 +27,25 @@ class PostsURLsTests(TestCase):
         cls.URLPOST_EDIT = reverse('posts:post_edit', args=(cls.post.pk,))
         cls.url_status_code = (
             (reverse('posts:index'),
-            [HTTPStatus.OK, 'posts/index.html']),
+             [HTTPStatus.OK, 'posts/index.html']),
             (f'/group/{cls.post.group.slug}/',
              [HTTPStatus.OK, 'posts/group_list.html']),
             (f'/profile/{cls.user.username}/',
-            [HTTPStatus.OK, 'posts/profile.html']),
+             [HTTPStatus.OK, 'posts/profile.html']),
             (cls.URLPOST_DETAIL,
-            [HTTPStatus.OK, 'posts/post_detail.html']),
+             [HTTPStatus.OK, 'posts/post_detail.html']),
             (cls.URLPOST_EDIT,
-            [HTTPStatus.FOUND, 'posts/create_post.html']),
+             [HTTPStatus.FOUND, 'posts/create_post.html']),
             (cls.URLPOST_CREATE,
-            [HTTPStatus.FOUND, 'posts/create_post.html']),
+             [HTTPStatus.FOUND, 'posts/create_post.html']),
             (reverse('users:signup'),
-            [HTTPStatus.OK, 'users/signup.html']),
+             [HTTPStatus.OK, 'users/signup.html']),
             (reverse('users:login'),
-            [HTTPStatus.OK, 'users/login.html']),
+             [HTTPStatus.OK, 'users/login.html']),
             (reverse('posts:follow_index'),
-            [HTTPStatus.FOUND,'posts/follow.html']),
+             [HTTPStatus.FOUND, 'posts/follow.html']),
             ('/some_page/',
-            [HTTPStatus.NOT_FOUND, 'posts/404.html']),)
+             [HTTPStatus.NOT_FOUND, 'posts/404.html']),)
 
     def setUp(self):
         self.guest_client = Client()
