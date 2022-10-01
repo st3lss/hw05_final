@@ -92,15 +92,15 @@ class PostsFormsTests(TestCase):
         posts_count = Post.objects.count()
         form_data = {
             'text': 'После ред',
-            'group': self.group.pk,}
+            'group': self.group.pk}
         response = self.authorized_client.post(
-            reverse('posts:post_edit', kwargs={'post_id': self.post.id,}),
+            reverse('posts:post_edit', kwargs={'post_id': self.post.id}),
             data=form_data, follow=True)
         edited_post = Post.objects.get(id=self.post.id)
         self.assertRedirects(
             response,
             reverse('posts:post_detail', kwargs={
-                'post_id': edited_post.id,}))
+                'post_id': edited_post.id}))
         self.assertEqual(
             edited_post.text, form_data['text'])
         self.assertEqual(
