@@ -1,5 +1,6 @@
 from django.test import Client, TestCase
 from django.urls import reverse
+from django.core.cache import cache
 
 from posts.models import Group, Post, User
 
@@ -8,21 +9,31 @@ class PaginatorViewsTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.authorized_author = Client()
         cls.author = User.objects.create_user(username='test_user')
         cls.group = Group.objects.create(
             title='test_title',
             description='test_description',
             slug='testslug'
         )
+        cls.posts = []
+
+        for paginator_post in range(13):
+            cls.posts.append(
+                Post(
+                    author=cls.author,
+                    group=cls.group,
+                    text=f'{paginator_post}',
+                )
+            )
+        Post.objects.bulk_create(cls.posts)
 
     def setUp(self):
-        for post_temp in range(13):
-            Post.objects.create(
-                text=f'text{post_temp}',
-                author=self.author,
-                group=self.group
-            )
+        self.user = User.objects.create_user(
+            username='paginator_user'
+        )
+        self.authorized_author = self.client
+        self.authorized_author.force_login(self.user)
+        cache.clear()
 
     def test_first_page_contains_ten_records(self):
         """Проверка: на первой странице должно быть 10 постов."""

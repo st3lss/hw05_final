@@ -89,25 +89,23 @@ class PostsFormsTests(TestCase):
 
     def test_edit(self):
         """Проверка редактирования."""
-        count_posts = Post.objects.count()
-        latest_post_id = Post.objects.latest('id').id
-        context = {
-            'group': self.group_check.id,
-            'text': 'Какой-то текст 2',
-        }
+        posts_count = Post.objects.count()
+        form_data = {
+            'text': 'После ред',
+            'group': self.group.pk,}
         response = self.authorized_client.post(
-            reverse(
-                'posts:post_edit',
-                kwargs={'post_id': latest_post_id}),
-            data=context, follow=True)
+            reverse('posts:post_edit', kwargs={'post_id': self.post.id,}),
+            data=form_data, follow=True)
+        edited_post = Post.objects.get(id=self.post.id)
         self.assertRedirects(
-            response, reverse(
-                'posts:post_detail',
-                kwargs={'post_id': latest_post_id}))
-        self.assertEqual(Post.objects.count(), count_posts)
-        self.assertTrue(Post.objects.filter(
-            text=context['text'],
-            group=context['group']).exists())
+            response,
+            reverse('posts:post_detail', kwargs={
+                'post_id': edited_post.id,}))
+        self.assertEqual(
+            edited_post.text, form_data['text'])
+        self.assertEqual(
+            edited_post.group.id, form_data['group'])
+        self.assertEqual(Post.objects.count(), posts_count)
 
     def test_comment_add_post(self):
         """Проверка добавления коммента к посту."""
@@ -126,6 +124,6 @@ class PostsFormsTests(TestCase):
             args=(self.post.id,)))
         self.assertEqual(Comment.objects.count(), 1)
         self.assertTrue(Comment.objects.filter(
-            text='Коммент тест',
-            author=self.user).exists())
+            text=comment['text'],
+            author=comment['author']).exists())
         self.assertEqual(response.status_code, HTTPStatus.OK)

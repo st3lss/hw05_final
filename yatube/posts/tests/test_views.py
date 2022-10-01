@@ -9,7 +9,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 
 from posts.forms import PostForm
-from posts.models import Group, Post, User
+from posts.models import Group, Post, User, Follow
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
@@ -122,16 +122,20 @@ class FollowViewsTest(TestCase):
         self.author_client.force_login(self.author)
 
     def test_follow_page(self):
-        """Проверка подписки/отписки."""
+        """Проверка подписки."""
         self.follower_client.get(reverse('posts:profile_follow',
                                  kwargs={'username': self.author.username}))
         response = self.follower_client.get(reverse('posts:follow_index'))
         self.assertEqual((len(response.context['page_obj'])), 1)
         page_object = response.context.get('page_obj').object_list[0]
-        self.assertEqual(page_object.author, self.author)
+        self.assertTrue(
+            Follow.objects.filter(
+                user=self.follower, author=self.author).exists())
         self.assertEqual(page_object.text, self.post.text)
         self.assertEqual(page_object.pub_date, self.post.pub_date)
 
+    def test_unfollow_page(self):
+        """Проверка отписки."""
         self.follower_client.get(reverse('posts:profile_unfollow',
                                  kwargs={'username': self.author.username}))
         response = self.follower_client.get(reverse('posts:follow_index'))
