@@ -18,6 +18,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '[::1]',
     'testserver',
+    'www.st3ls.pythonanywhere.com',
+    'st3ls.pythonanywhere.com',
 ]
 
 
